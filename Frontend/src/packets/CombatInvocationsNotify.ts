@@ -61,7 +61,12 @@ function handleHit(data: EvtBeingHitInfo, packet: PacketNotifyDT<CombatInvocatio
     const defenderEntity = world.entityList.get(data.AttackResult.DefenseId);
 
     if(data.AttackResult.AbilityIdentifier.AbilityCasterId){
-        attackerEntity = world.getRootOwner(data.AttackResult.AbilityIdentifier.AbilityCasterId) || world.getRootOwner(data.AttackResult.AttackerId) || world.entityList.get(data.AttackResult.AttackerId);
+        const abilityCaster = world.entityList.get(data.AttackResult.AbilityIdentifier.AbilityCasterId);
+        if(abilityCaster){
+            //lol i'd have to track embryos for this to work
+            console.log(abilityCaster.getFriendlyName() + " casted " + data.AttackResult.AbilityIdentifier.InstancedAbilityId + " on " + defenderEntity?.getFriendlyName() || data.AttackResult.DefenseId);
+        }
+        // attackerEntity = world.getRootOwner(data.AttackResult.AbilityIdentifier.AbilityCasterId) || world.getRootOwner(data.AttackResult.AttackerId) || world.entityList.get(data.AttackResult.AttackerId);
     }
     // const owner = world.getOwner(attackerEntity);
 

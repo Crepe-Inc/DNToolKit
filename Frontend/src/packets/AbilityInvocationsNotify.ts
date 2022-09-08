@@ -30,13 +30,16 @@ export default function handle(data: PacketNotifyDT<AbilityInvocationsNotify>) {
 
 function handleCreateGadget(data: AbilityActionCreateGadget, invoke: AbilityInvokeEntry) {
     let responsible = world.entityList.get(invoke.EntityId);
-    console.log(responsible.getFriendlyName() || invoke.EntityId + " created a gadget");
+    console.log(responsible?.getFriendlyName() || invoke.EntityId + " created a gadget");
     
 }
 
 function handleMetaModifierChange(data: AbilityMetaModifierChange, invoke: AbilityInvokeEntry){
     let responsible = world.entityList.get(invoke.EntityId);
-    console.log(responsible.getFriendlyName() || invoke.EntityId + " changed a meta modifier: " + JSON.stringify(data));
+    if(!responsible){
+        return;
+    }
+    console.log(responsible?.getFriendlyName() || invoke.EntityId + " changed a meta modifier: " + JSON.stringify(data));
 }
     
 

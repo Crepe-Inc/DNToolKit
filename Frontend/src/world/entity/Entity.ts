@@ -149,7 +149,7 @@ export class MPLevel extends Entity {
     AuthorityPeerId:number;
 
     getFriendlyName(): string{
-        return "MPLevel"
+        return "MPLevel_" + this.EntityId;
 
     }
 }
@@ -159,7 +159,7 @@ export class Avatar extends Entity {
     Avatar: SceneAvatarInfo;
 
     getFriendlyName(): string{
-        return FriendlyNames[this.Avatar.AvatarId] || this.Avatar.AvatarId.toString();
+        return FriendlyNames[this.Avatar.AvatarId] || "Avatar_" + this.Avatar.AvatarId;
     }
 }
 
@@ -168,7 +168,7 @@ export class Monster extends Entity {
     Monster: SceneMonsterInfo;
 
     getFriendlyName(): string{
-        return FriendlyNames[this.Monster.MonsterId] || this.Monster.MonsterId.toString();
+        return FriendlyNames[this.Monster.MonsterId] || "Monster_" + this.Monster.MonsterId.toString();
     }
 }
 
@@ -178,7 +178,7 @@ export class Gadget extends Entity {
     Gadget: SceneGadgetInfo;
 
     getFriendlyName(): string{
-        return FriendlyNames[this.Gadget.GadgetId] || this.Gadget.GadgetId.toString();
+        return FriendlyNames[this.Gadget.GadgetId] || "Gadget_"+this.Gadget.GadgetId.toString();
     }
 }
 

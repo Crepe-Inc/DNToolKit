@@ -33,7 +33,8 @@
 
         4. Play as normal
         5. Observe the DamageTable update below
-        6. Hit "DownloadLog" to download a log.dntkap file that contains all the packets you've received
+        6. Hit "DownloadLog" to download a log.dntkap file that 
+        contains all the packets you've received
         
 
     </pre><br>

@@ -18,20 +18,8 @@ export default class PacketList{
         // look into checking if all the incoming packets are in order
         // monitor this performance wise bc if this becomes a problem i'll have to figure something else out
 
-        let earliestms = Long.fromValue(packets.sort(this.longMSsort)[0].PacketHead.SentMs);
-
-        if(earliestms.greaterThan(this.latestMS)){
-            this.latestMS = earliestms;
-
-            this.packetList = this.packetList.concat(packets);
-        }else{
-            console.log("packets were out of order")
-            this.packetList = this.packetList.concat(packets);
-        
-        
-            this.packetList.sort(this.longMSsort);
-            this.latestMS = Long.fromValue(this.packetList[this.packetList.length-1].PacketHead.SentMs);
-        }
+        this.packetList = this.packetList.concat(packets);
+        //theres a few packets without packethead
 
         if(this.onAddPackets){
             this.onAddPackets(packets);
