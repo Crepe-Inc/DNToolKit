@@ -2,14 +2,18 @@ import { ProtEntityType } from "../../src/messages/ProtEntityType";
 import type {SceneEntityDisappearNotify} from "../../src/messages/SceneEntityDisappearNotify";
 import type {PacketNotifyDT} from "../../src/websocket/WSPacket";
 import {world} from "../main";
+import { Entity } from "../world/entity/Entity";
 
 export default function handle(data: PacketNotifyDT<SceneEntityDisappearNotify>)
 {
     for(let entityId of data.PacketData.EntityList){
         const entity = world.entityList.get(entityId);
 
+        if(!entity){
+            continue;   
+        }
         //we rely on sceneteam to update avatar entities
-        if(entity?.EntityType == ProtEntityType.PROT_ENTITY_TYPE_AVATAR){
+        if(Entity.isAvatar(entity)){
             //todo:set the avatar to an inactive state
             continue;
         };

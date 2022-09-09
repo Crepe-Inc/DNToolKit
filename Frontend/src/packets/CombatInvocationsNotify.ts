@@ -43,7 +43,7 @@ export default function handle(data: PacketNotifyDT<CombatInvocationsNotify>) {
                 default:
                 // console.log(CombatTypeArgument[i.ArgumentType])
             }
-        }, 100)
+        }, 50)
     }
 }
 
@@ -53,6 +53,8 @@ function handleHit(data: EvtBeingHitInfo, packet: PacketNotifyDT<CombatInvocatio
 
     //this is for default i think?
     //shatter etc
+
+    console.log(world.entityList)
     if (data.AttackResult.AttackerId == 327155713) {
         world.entityList.forEach(entity => {
             if (entity.EntityType == ProtEntityType.PROT_ENTITY_TYPE_MP_LEVEL) {

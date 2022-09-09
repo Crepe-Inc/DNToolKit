@@ -29,6 +29,9 @@ export class Entity {
     //i think this is generally only in Gadget but meh
     OwnerId: number = 0;
 
+
+    //override map implement?
+
     /*
         I really don't think these are necessary
         at the very least I don't know how to make sense of them
@@ -44,6 +47,7 @@ export class Entity {
         ServerBuffList?: ServerBuff[];
 
     */
+
 
     
     addEmbryo(data: AbilityEmbryo){

@@ -22,12 +22,17 @@ const log = new Array<string>();
 
 const time = {
     timeMS: 0,
+    callbacks: new Array<(timeMS: number) => void>(),
     getTime: () => {
         return time.timeMS;
     },
     setTime : (timeMS: number) => {
         time.timeMS = timeMS;
+        time.callbacks.forEach(cb => cb(timeMS));
     },
+    addCallback: (callback: (timeMS: number) => void) => {
+        time.callbacks.push(callback);
+    }
 };
 
 

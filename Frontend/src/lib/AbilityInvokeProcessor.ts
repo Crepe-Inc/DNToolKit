@@ -33,14 +33,14 @@ export function handleInvoke(data: AbilityInvokeEntry[], entityId?: number) {
                 handleBalls(i as any)
                 break;
             case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_MODIFIER_DURABILITY_CHANGE:
-                //handleMetaModifierDurabilityChange(i as Invoke<AbilityMetaModifierDurabilityChange>);
+                handleMetaModifierDurabilityChange(i as Invoke<AbilityMetaModifierDurabilityChange>);
                 //THERES A MODIFIER DURABILITY CHANGE IN ABILITYSYNCSTATEINFO IM GOING TO CRYYYYYYYY
                 break;
             case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_ADD_NEW_ABILITY:
                 handleNewAbility(i as Invoke<AbilityMetaAddAbility>);
                 break;
             case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_TRIGGER_ELEMENT_REACTION:
-                //handleMetaTriggerElementReaction(i as any);
+                handleMetaTriggerElementReaction(i as any);
                 break;
             case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_REMOVE_ABILITY:
                 handleRemoveAbility(i as any);
@@ -71,7 +71,7 @@ function handleBalls(data: Invoke<AbilityActionGenerateElemBall>){
     let responsible = world.entityList.get(data.EntityId);
     let ability = responsible?.abilities[data.Head.InstancedAbilityId]
     console.log(data)
-    console.log((responsible?.getFriendlyName() || data.EntityId) + " generated a ball of element: " + ability);
+    console.log((responsible?.getFriendlyName() || data.EntityId) + " generated a ball of with ability" + ability);
 
 }
 
@@ -103,6 +103,7 @@ function handleCreateGadget(data: Invoke<AbilityActionCreateGadget>) {
 
 }
 function handleMetaTriggerElementReaction(data: Invoke<AbilityMetaTriggerElementReaction>) {
+    return;
     let responsible = world.entityList.get(data.AbilityData.TriggerEntityId || data.EntityId);
     let readable = {
         ReactionType: ElementReactionType[data.AbilityData.ElementReactionType],
@@ -120,6 +121,11 @@ function handleMetaModifierChange(data: Invoke<AbilityMetaModifierChange>) {
         return;
     }
     if (!Entity.isAvatar(responsible)) return;
+    if(data.Head.InstancedModifierId == 0){
+        console.log("modifier id is 0")
+        console.log(data)
+        return
+    }
     if (metaModifiers.has(data.Head.InstancedModifierId)) {
         // console.log("Modifier already exists, old was:");
         // console.log(metaModifiers.get(data.Head.InstancedModifierId));
@@ -133,14 +139,25 @@ function handleMetaModifierChange(data: Invoke<AbilityMetaModifierChange>) {
 
 function handleMetaModifierDurabilityChange(data: Invoke<AbilityMetaModifierDurabilityChange>) {
 
+    return;
     let responsible = world.entityList.get(data.EntityId);
 
     if (!responsible) {
         return;
     }
+    
+    let abilityName = responsible.abilities[data.Head.InstancedAbilityId];
+    //somehow figure out abilityName and how to relate it to the ElementType;
+    let timeLeft = data.AbilityData.RemainDurability / data.AbilityData.ReduceDurability;
+    
+    //ModifierConfigLocalId and InstancedModifierId are set, nothing else is
+    // console.log(data.Head)
     //reduce durability == decay rate/second
     //remain durability == current durability
-    console.log((responsible?.getFriendlyName() || data.EntityId) + " applied an element " + JSON.stringify(data.AbilityData));
+
+    // console.log((responsible?.getFriendlyName() || data.EntityId) + " applied an element " + JSON.stringify(data.AbilityData));
+    //time left = remain durability / reduce durability
+
 }
 
 export enum ElementReactionType {

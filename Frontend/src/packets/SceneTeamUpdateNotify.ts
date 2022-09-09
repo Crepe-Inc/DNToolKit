@@ -43,7 +43,15 @@ export default function handle(data: PacketNotifyDT<SceneTeamUpdateNotify>) {
             AuthorityPeerId: 1
         }))
     }
-    if(Object.values(newAvatars).length > 0)
-        console.log(`New Team! ${Object.values(newAvatars).map(e => e.getFriendlyName()).join(", ")} - ${a.join(", ")} spawned`)
+    if(Object.values(newAvatars).length > 0){
+        console.log(`New Team! ${Object.values(newAvatars).map(e => e.getFriendlyName()).join(", ")} spawned`)
+    }
+
+    let entityIds = Object.values(newAvatars).map(x=>x.EntityId);
+    
+    console.log(entityIds.map(x=>world.entityList.get(x)))
+
+
+    
 
 }
