@@ -19,7 +19,7 @@ export default function handle(data: PacketNotifyDT<CombatInvocationsNotify>) {
 
         //100ms timeout to allow for the entity to be registered just in case
         //
-        setTimeout(()=>{
+        setTimeout(() => {
             switch (i.ArgumentType) {
                 case CombatTypeArgument.COMBAT_TYPE_ARGUMENT_ENTITY_MOVE:
                     handleMove(i.CombatData as EntityMoveInfo);
@@ -33,6 +33,7 @@ export default function handle(data: PacketNotifyDT<CombatInvocationsNotify>) {
                 case CombatTypeArgument.COMBAT_TYPE_ARGUMENT_ANIMATOR_PARAMETER_CHANGED:
                     break;
                 case CombatTypeArgument.COMBAT_TYPE_ARGUMENT_Unk2700_KPDNFKCMKPG:
+                    //always sent by the server
                     handleHeal(i.CombatData as unknown as HealInvoke)
                     break;
                 //healing packet
@@ -47,9 +48,11 @@ export default function handle(data: PacketNotifyDT<CombatInvocationsNotify>) {
 }
 
 function handleHit(data: EvtBeingHitInfo, packet: PacketNotifyDT<CombatInvocationsNotify>) {
-    if(packet.Sender === Sender.Client) return;
+    if (packet.Sender === Sender.Client) return;
     let attackerEntity = world.getRootOwner(data.AttackResult.AttackerId) || world.entityList.get(data.AttackResult.AttackerId);
 
+    //this is for default i think?
+    //shatter etc
     if (data.AttackResult.AttackerId == 327155713) {
         world.entityList.forEach(entity => {
             if (entity.EntityType == ProtEntityType.PROT_ENTITY_TYPE_MP_LEVEL) {
@@ -60,11 +63,15 @@ function handleHit(data: EvtBeingHitInfo, packet: PacketNotifyDT<CombatInvocatio
 
     const defenderEntity = world.entityList.get(data.AttackResult.DefenseId);
 
-    if(data.AttackResult.AbilityIdentifier.AbilityCasterId){
-        const abilityCaster = world.entityList.get(data.AttackResult.AbilityIdentifier.AbilityCasterId);
-        if(abilityCaster){
+
+    //todo: remove if i want this info
+    if (data.AttackResult?.AbilityIdentifier?.AbilityCasterId == -42322) {
+        
+        const abilityCaster = world.getRootOwner(data.AttackResult.AbilityIdentifier.AbilityCasterId) || world.entityList.get(data.AttackResult.AbilityIdentifier.AbilityCasterId);
+        if (abilityCaster) {
+            let abilityName = abilityCaster.abilities[data.AttackResult.AbilityIdentifier.InstancedAbilityId];
             //lol i'd have to track embryos for this to work
-            console.log(abilityCaster.getFriendlyName() + " casted " + data.AttackResult.AbilityIdentifier.InstancedAbilityId + " on " + defenderEntity?.getFriendlyName() || data.AttackResult.DefenseId);
+            console.log(abilityCaster.getFriendlyName() + " casted " + (abilityName || `unknown_${data.AttackResult.AbilityIdentifier.InstancedAbilityId}`) + " on " + (defenderEntity?.getFriendlyName() || data.AttackResult.DefenseId));
         }
         // attackerEntity = world.getRootOwner(data.AttackResult.AbilityIdentifier.AbilityCasterId) || world.getRootOwner(data.AttackResult.AttackerId) || world.entityList.get(data.AttackResult.AttackerId);
     }
@@ -140,7 +147,7 @@ interface HealInvoke {
     ActualAmount?: number;
 }
 
-enum Element {
+export enum Element {
     Physical = 0,
     Pyro = 1,
     Hydro = 2,

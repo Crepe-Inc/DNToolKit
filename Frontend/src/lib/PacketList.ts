@@ -1,4 +1,5 @@
 import Long from "long";
+import { time } from "../main";
 import type { PacketNotifyData } from "../websocket/WSPacket";
 
 export default class PacketList{
@@ -18,7 +19,12 @@ export default class PacketList{
         // look into checking if all the incoming packets are in order
         // monitor this performance wise bc if this becomes a problem i'll have to figure something else out
 
-        this.packetList = this.packetList.concat(packets);
+        packets.forEach(pkt => {
+            time.setTime(Long.fromValue(pkt.PacketHead.SentMs).toNumber())   
+            //packetlist.concat should work but i want to update the "time" variable
+            this.packetList.push(pkt); 
+        })
+
         //theres a few packets without packethead
 
         if(this.onAddPackets){

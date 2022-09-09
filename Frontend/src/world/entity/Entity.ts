@@ -9,6 +9,8 @@ import type {SceneEntityInfo} from "../../messages/SceneEntityInfo";
 import type {EvtCreateGadgetNotify} from "../../messages/EvtCreateGadgetNotify";
 import type {MPLevelEntityInfo} from "../../messages/MPLevelEntityInfo";
 import FriendlyNames from "../../resources/FriendlyNames.json";
+import EmbryoList from "../../lib/Embryolist";
+import { AbilityEmbryo } from "../../messages/AbilityEmbryo";
 
 
 export class Entity {
@@ -21,6 +23,8 @@ export class Entity {
 
     name: string;
 
+    //id to string
+    abilities: Record<number, string> = {};
 
     //i think this is generally only in Gadget but meh
     OwnerId: number = 0;
@@ -41,6 +45,28 @@ export class Entity {
 
     */
 
+    
+    addEmbryo(data: AbilityEmbryo){
+        if(!Entity.isAvatar(this)){
+            console.log("yay!")
+            console.log(data)
+        }
+        if(!data.AbilityId || !data.AbilityNameHash){
+            return;
+        }
+        const name = EmbryoList.getEmbryo(data.AbilityNameHash);
+        this.abilities[data.AbilityId] = name || `Unknown_${data.AbilityNameHash}`;
+
+        // console.log(this.getFriendlyName() + " got ability " + (name || data.AbilityNameHash));
+    }
+
+    removeEmbryo(id: number){
+        if(this.abilities[id]){
+            delete this.abilities[id];
+        }else{
+            console.log("Tried to remove nonexistant ability", id);
+        }
+    }
 
 
     getProp(prop: Properties) {

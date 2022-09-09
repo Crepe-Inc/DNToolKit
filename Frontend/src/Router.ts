@@ -9,6 +9,9 @@ import SceneTeamHandle from "./packets/SceneTeamUpdateNotify";
 import EvtDestroyGadgetHandle from "./packets/EvtDestroyGadgetNotify";
 import PlayerEnterSceneInfoHandle from "./packets/PlayerEnterSceneInfoNotify";
 import AbilityInvokeHandle from "./packets/AbilityInvocationsNotify"
+import ClientAbilityChangeHandle from "./packets/ClientAbilityChangeNotify";
+import ClientAbilityInitFinishHandle from "./packets/ClientAbilityInitFinishNotify";
+import ClientAbilityChangeNotifyHandle from "./packets/ClientAbilityChangeNotify";
 import { log } from "./main";
 import Base64 from "./b64";
 
@@ -25,6 +28,7 @@ export default class Router{
     constructor(){
         // register all the handlers here
         // it'll be ugly but i dont trust dynamic imports
+        // thank you copilot
         this.register("SceneEntityAppearNotify", SceneEntityHandle)
         this.register("SceneEntityDisappearNotify", SceneEntityDisHandle)
         this.register("CombatInvocationsNotify", CombatInvokeHandle)
@@ -35,6 +39,10 @@ export default class Router{
         this.register("EvtDestroyGadgetNotify", EvtDestroyGadgetHandle)
         this.register("PlayerEnterSceneInfoNotify", PlayerEnterSceneInfoHandle)
         this.register("AbilityInvocationsNotify", AbilityInvokeHandle)
+        this.register("ClientAbilityChangeNotify", ClientAbilityChangeHandle)
+        this.register("ClientAbilityInitFinishNotify", ClientAbilityInitFinishHandle)
+        this.register("ClientAbilityChangeNotify", ClientAbilityChangeNotifyHandle)
+
     }
     public register(path: string, handler: (pkt: PacketNotifyData)=> void){
         this.routes[path] = handler;

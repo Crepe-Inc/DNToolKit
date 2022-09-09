@@ -6,6 +6,7 @@
     import DamageTable from './lib/DamageTable.svelte'; 
 
     import DownloadLog from './lib/DownloadLog.svelte';
+    import { logModifiers } from './lib/AbilityInvokeProcessor';
 
     function testReq(){
         backendSocket.send({
@@ -43,6 +44,8 @@
     
     <br>
     <DownloadLog/>
+    <br>
+    <button on:click={logModifiers}>logModifiers</button>
 
 </main>
 
