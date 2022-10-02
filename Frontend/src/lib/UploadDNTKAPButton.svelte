@@ -27,7 +27,9 @@
 	}
     
     function send(thing: File){
-        console.log(thing.text())
+        //unfortunately this has an issue...
+        //it inputs the packets so fast that it can miss some data parsing
+
 
         thing.text().then(data=>{
             let dataarr = data.split("█▄█\n").map(x=>
@@ -46,10 +48,10 @@
                     PacketHead: {
                         "PacketId": 0,
                         "RpcId": 0,
-                        "ClientSequenceId": 58,
+                        "ClientSequenceId": 0,
                         "EnetChannelId": 0,
                         "EnetIsReliable": 1,
-                        "SentMs": Long.fromValue(x.time || 0) || Long.ZERO,
+                        "SentMs": Long.fromValue(x.time || x.PacketHead.SentMs||0 ) || Long.ZERO,
                         "UserId": 0,
                         "UserIp": 0,
                         "UserSessionId": 0,
@@ -63,17 +65,17 @@
                         "IsSetGameThread": false,
                         "GameThreadIndex": 0
                     },
-                    PacketData: x.data || {} as object,
-                    CmdID: x.cmd||"what" as string,
-                    Sender: x.sender || 0 as Sender,
+                    PacketData: x.data || x.PacketData as object,
+                    CmdID: x.cmd || x.CmdID as string,
+                    Sender: x.sender || x.Sender as Sender,
                 }
-                console.log(z)
-                return z
+
+                backendSocket.emit("PacketNotify", {
+                    cmd: "PacketNotify",
+                    data: [z]
+                })
             })
-            backendSocket.emit("PacketNotify", {
-                cmd: "PacketNotify",
-                data: b
-            })
+            
         })
 
 

@@ -39,7 +39,7 @@ unlike ts-proto's options of camelCase or snake_case.
 They should be pretty easily parsed as:
 ```js
 const fs = require("fs");
-
+const JSONBI = require("json-bigint")
 const file = fs.readFileSync("./log.dntkap").toString("utf-8");
 
 const pkts = file.split("█▄█\n")
@@ -47,20 +47,20 @@ console.log("found " + pkts.length + " packets");
 
 const out = pkts.map((pkt) => {
     const strdata = Buffer.from(pkt, "base64").toString("utf-8");
-    const jsonData = JSON.parse(strdata);
     /*
 
     {
-        time: 000 //SentMs from server/client
-        sender: 1 //1 for Client, 0 for Server
-        data: {} //object with packet data
-        cmd: "EntityFightPropNotify" //name of packet
+        PacketHead: {
+            SentMs: 000 //time
+        } //SentMs from server/client
+        Sender: 1 //1 for Client, 0 for Server
+        PacketData: {} //object with packet data
+        CmdID: "packetnamehurrdurr" //name of packet
     }
     */
-    jsonData.data = {
-        "lolNo": "replaced for privacy"
-    }
-    return jsonData;
+    //if you need to parse these into js objects
+    //use json-bigint the lib
+    return JSONBI.parse(strdata);
 });
 
 
