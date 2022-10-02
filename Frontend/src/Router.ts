@@ -14,6 +14,7 @@ import ClientAbilityInitFinishHandle from "./packets/ClientAbilityInitFinishNoti
 import ClientAbilityChangeNotifyHandle from "./packets/ClientAbilityChangeNotify";
 import { log } from "./main";
 import Base64 from "./b64";
+import JSONbi from "json-bigint"
 
 const doNotLog = [
     "GetPlayerTokenReq",
@@ -67,7 +68,7 @@ export default class Router{
             data.data = {_info: "REDACTED"}
         }
 
-        this.AddToLog(JSON.stringify(data));
+        this.AddToLog(JSONbi.stringify(data));
 
     }
 
