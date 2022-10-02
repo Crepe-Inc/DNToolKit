@@ -20,7 +20,7 @@ export default class PacketList{
         // monitor this performance wise bc if this becomes a problem i'll have to figure something else out
 
         packets.forEach(pkt => {
-            time.setTime(Long.fromValue(pkt.PacketHead.SentMs).toNumber())   
+            if(pkt.PacketHead.SentMs)time.setTime(Long.fromValue(pkt.PacketHead.SentMs).toNumber())   
             //packetlist.concat should work but i want to update the "time" variable
             this.packetList.push(pkt); 
         })

@@ -2,7 +2,7 @@
     import logo from './assets/svelte.png'
     import {backendSocket} from "./main";
     import ConsoleWindow from "./lib/ConsoleWindow.svelte";
-    import UploadPcapButton from './lib/UploadPcapButton.svelte';
+    import UploadDNTKAPButton from './lib/UploadDNTKAPButton.svelte';
     import DamageTable from './lib/DamageTable.svelte'; 
 
     import DownloadLog from './lib/DownloadLog.svelte';
@@ -41,7 +41,7 @@
     </pre><br>
     
     <DamageTable></DamageTable>
-    
+    <UploadDNTKAPButton></UploadDNTKAPButton>
     <br>
     <DownloadLog/>
     <br>
