@@ -73,7 +73,7 @@ function handleHit(data: EvtBeingHitInfo, packet: PacketNotifyDT<CombatInvocatio
         if (abilityCaster) {
             let abilityName = abilityCaster.abilities[data.AttackResult.AbilityIdentifier.InstancedAbilityId];
             //lol i'd have to track embryos for this to work
-            console.log(abilityCaster.getFriendlyName() + " casted " + (abilityName || `unknown_${data.AttackResult.AbilityIdentifier.InstancedAbilityId}`) + " on " + (defenderEntity?.getFriendlyName() || data.AttackResult.DefenseId));
+            //console.log(abilityCaster.getFriendlyName() + " casted " + (abilityName || `unknown_${data.AttackResult.AbilityIdentifier.InstancedAbilityId}`) + " on " + (defenderEntity?.getFriendlyName() || data.AttackResult.DefenseId));
         }
         // attackerEntity = world.getRootOwner(data.AttackResult.AbilityIdentifier.AbilityCasterId) || world.getRootOwner(data.AttackResult.AttackerId) || world.entityList.get(data.AttackResult.AttackerId);
     }
@@ -98,7 +98,7 @@ function handleHit(data: EvtBeingHitInfo, packet: PacketNotifyDT<CombatInvocatio
     ActualData.Defender = defenderEntity ? defenderEntity.getFriendlyName() : ActualData.Defender;
 
 
-    if (ActualData.Damage) console.log(`${ActualData.Attacker} dealt ${ActualData.Damage} damage to ${ActualData.Defender}, element: ${Element[ActualData.Element]}, crit: ${ActualData.IsCrit}`)
+    //if (ActualData.Damage) console.log(`${ActualData.Attacker} dealt ${ActualData.Damage} damage to ${ActualData.Defender}, element: ${Element[ActualData.Element]}, crit: ${ActualData.IsCrit}`)
     //todo: maybe write this to a file idk
     AddDamageToTable({
         Attacker: ActualData.Attacker.toString(),
@@ -134,7 +134,7 @@ function handleHeal(data: HealInvoke) {
         Crit: false,
     });
 
-    console.log(`${healerName} healed ${healeeName} for ${data.ActualAmount} health`)
+    //console.log(`${healerName} healed ${healeeName} for ${data.ActualAmount} health`)
 }
 
 

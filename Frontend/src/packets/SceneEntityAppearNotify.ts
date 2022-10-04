@@ -10,12 +10,15 @@ export default function handle(data: PacketNotifyDT<SceneEntityAppearNotify>){
 
     for(let entity of data.PacketData.EntityList){
 
+        if(entity.EntityType == ProtEntityType.PROT_ENTITY_TYPE_AVATAR || entity.EntityType == ProtEntityType.PROT_ENTITY_TYPE_MONSTER){
+            console.log(entity)    
+            
+        }
         //we rely on sceneteam to update avatar entities
         if(entity.EntityType == ProtEntityType.PROT_ENTITY_TYPE_AVATAR) {
             //todo:set the avatar to active state
             continue;
         }
-                
         world.registerEntity(Entity.fromSceneEntity(entity), data.PacketData.AppearType)
     }
     // console.log(`Registered ${data.PacketData.EntityList.length} entities...`)

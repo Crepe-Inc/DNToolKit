@@ -9,7 +9,7 @@ import type {SceneEntityInfo} from "../../messages/SceneEntityInfo";
 import type {EvtCreateGadgetNotify} from "../../messages/EvtCreateGadgetNotify";
 import type {MPLevelEntityInfo} from "../../messages/MPLevelEntityInfo";
 import FriendlyNames from "../../resources/FriendlyNames.json";
-import EmbryoList from "../../lib/Embryolist";
+import EmbryoList from "../../lib/EmbryoList";
 import { AbilityEmbryo } from "../../messages/AbilityEmbryo";
 
 
@@ -20,6 +20,9 @@ export class Entity {
 
     PropList: Record<number, PropValue> = {};
     FightPropList: Record<number, number> = {};
+
+    MetaModifiers: Record<number, object> = {};
+
 
     name: string;
 

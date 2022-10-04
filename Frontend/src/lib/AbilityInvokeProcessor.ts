@@ -11,10 +11,10 @@ import { ModifierDurability } from "../messages/ModifierDurability";
 import { Entity } from "../world/entity/Entity";
 import { Element } from "../packets/CombatInvocationsNotify";
 import { AbilityMetaAddAbility } from "../messages/AbilityMetaAddAbility";
-import EmbryoList from "./Embryolist";
+import EmbryoList from "./EmbryoList";
 import { AbilityActionGenerateElemBall } from "../messages/AbilityActionGenerateElemBall";
+import { ModifierAction } from "../messages/ModifierAction";
 
-const metaModifiers = new Map<number, object>();
 
 export function handleInvoke(data: AbilityInvokeEntry[], entityId?: number) {
     //do actual damage parsing here
@@ -26,22 +26,22 @@ export function handleInvoke(data: AbilityInvokeEntry[], entityId?: number) {
             case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_ACTION_CREATE_GADGET:
                 handleCreateGadget(i as Invoke<AbilityActionCreateGadget>);
                 break;
-            case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_MODIFIER_CHANGE:
-                handleMetaModifierChange(i as Invoke<AbilityMetaModifierChange>);
-                break;
+            // case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_MODIFIER_CHANGE:
+            //     handleMetaModifierChange(i as Invoke<AbilityMetaModifierChange>);
+            //     break;
             case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_ACTION_GENERATE_ELEM_BALL:
                 handleBalls(i as any)
                 break;
-            case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_MODIFIER_DURABILITY_CHANGE:
-                handleMetaModifierDurabilityChange(i as Invoke<AbilityMetaModifierDurabilityChange>);
-                //THERES A MODIFIER DURABILITY CHANGE IN ABILITYSYNCSTATEINFO IM GOING TO CRYYYYYYYY
-                break;
+            // case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_MODIFIER_DURABILITY_CHANGE:
+            //     handleMetaModifierDurabilityChange(i as Invoke<AbilityMetaModifierDurabilityChange>);
+            //     //THERES A MODIFIER DURABILITY CHANGE IN ABILITYSYNCSTATEINFO IM GOING TO CRYYYYYYYY
+            //     break;
             case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_ADD_NEW_ABILITY:
                 handleNewAbility(i as Invoke<AbilityMetaAddAbility>);
                 break;
-            case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_TRIGGER_ELEMENT_REACTION:
-                handleMetaTriggerElementReaction(i as any);
-                break;
+            // case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_TRIGGER_ELEMENT_REACTION:
+            //     handleMetaTriggerElementReaction(i as any);
+            //     break;
             case AbilityInvokeArgument.ABILITY_INVOKE_ARGUMENT_META_REMOVE_ABILITY:
                 handleRemoveAbility(i as any);
 
@@ -51,8 +51,15 @@ export function handleInvoke(data: AbilityInvokeEntry[], entityId?: number) {
 
 
             default:
-
-            // console.log(i)
+                //@ts-ignore
+                i.ArgumentType = AbilityInvokeArgument[i.ArgumentType];
+                if(i.EntityId){
+                    console.log(i)
+                }
+        }
+        if([9, 8, 5, 101].includes(i.ArgumentType)){
+            console.log(i)
+            console.log("SPECIAL!!!!!")
         }
     }
 }
@@ -102,6 +109,7 @@ function handleCreateGadget(data: Invoke<AbilityActionCreateGadget>) {
     console.log((responsible?.getFriendlyName() || data.EntityId) + " created a gadget");
 
 }
+
 function handleMetaTriggerElementReaction(data: Invoke<AbilityMetaTriggerElementReaction>) {
     return;
     let responsible = world.entityList.get(data.AbilityData.TriggerEntityId || data.EntityId);
@@ -116,6 +124,14 @@ function handleMetaTriggerElementReaction(data: Invoke<AbilityMetaTriggerElement
 }
 
 function handleMetaModifierChange(data: Invoke<AbilityMetaModifierChange>) {
+    /**
+     * Modifier Local id is unfortunately not unique, so we need to use the instanced modifier id
+     * to distinguish between modifiers
+     * intstanced abilityid is used to figure out what ability the modifier belongs to
+     * (as well as parent ability name)
+     * if modifierdurability.reduceratio > 0, then it is slowly ticking down
+     * exist duration is the total duration of the modifier so far(not sure if onfield or total) looks like total for now
+     */
     let responsible = world.entityList.get(data.EntityId);
     if (!responsible) {
         return;
@@ -124,16 +140,27 @@ function handleMetaModifierChange(data: Invoke<AbilityMetaModifierChange>) {
     if(data.Head.InstancedModifierId == 0){
         console.log("modifier id is 0")
         console.log(data)
-        return
+        // return
     }
-    if (metaModifiers.has(data.Head.InstancedModifierId)) {
-        // console.log("Modifier already exists, old was:");
-        // console.log(metaModifiers.get(data.Head.InstancedModifierId));
+    switch(data.AbilityData.Action){
+        case ModifierAction.MODIFIER_ACTION_ADDED:
+            responsible.MetaModifiers[data.Head.InstancedModifierId] = {
+                localId: data.AbilityData.ModifierLocalId,
+                source: data.Head.TargetId == 0 ? data.EntityId: data.Head.TargetId,
+                properties: data.AbilityData.Properties.map(x=>x.Key.Hash = EmbryoList[x.Key.Hash] || x.Key.Hash)
+            };
+            console.log(responsible.MetaModifiers)
+
+            break;
+        case ModifierAction.MODIFIER_ACTION_REMOVED:
+            delete responsible.MetaModifiers[data.Head.InstancedModifierId];
+
+            break;
+        default:
+            break;
+
     }
-    //this might be per entity
-    metaModifiers.set(data.Head.InstancedModifierId, data.AbilityData);
-    // console.log(data.AbilityData)
-    // console.log((responsible?.getFriendlyName() || data.EntityId) + " changed a meta modifier: " + JSON.stringify(data));
+
 }
 
 
@@ -203,5 +230,4 @@ export enum ElementReactionType {
 
 
 export function logModifiers() {
-    console.log(metaModifiers);
 }

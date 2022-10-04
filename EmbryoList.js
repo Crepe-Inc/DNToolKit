@@ -46,6 +46,8 @@ class EmbryoList{
 
 }
 
-let a = new EmbryoList();
-a.init();
-a.dump();
+// let a = new EmbryoList();
+// a.init();
+// a.dump();
+
+console.log(makeEmbryo("Animator_MoveSpeedRatio"))
